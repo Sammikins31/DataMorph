@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>🧬 Data-Morphed Generative Studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div id="topbar">
+        <h2>🧬 Data-Morphed Generative Studio</h2>
+        <div style="display:flex;align-items:center;gap:5px">
+            <label>Prompt:</label>
+            <input type="text" id="promptInput" placeholder="bird, flying bird, fish..." style="width:190px">
+        </div>
+        <div style="display:flex;align-items:center;gap:5px">
+            <label>Palette:</label>
+            <select id="paletteSelect">
+                <option value="magma" selected>magma</option>
+                <option value="inferno">inferno</option>
+                <option value="plasma">plasma</option>
+                <option value="viridis">viridis</option>
+                <option value="cividis">cividis</option>
+                <option value="turbo">turbo</option>
+            </select>
+        </div>
+        <div style="display:flex;align-items:center;gap:5px">
+            <label>Detail:</label>
+            <input type="range" id="densitySlider" min="1" max="100" value="60" style="width:80px">
+            <span id="densityVal">60</span>
+        </div>
+        <button id="renderBtn" disabled>⚡ Render Synthesis</button>
+        <div id="pyStatus">⏳ Loading Python…</div>
+    </div>
+
+    <div id="promptbar">
+        <div style="display:flex;align-items:center;gap:5px;">
+            <label>💡 <i>Try Prompt: Bird, Flying Bird, Fish, Rosette, Butterfly</i></label>
+        </div>
+
+        <div id="main">
+            <div id="sidebar">
+                <div>
+                    <div class="plabel">Dataset Upload</div>
+                    <div id="uploadArea" onclick="document.getElementById('csvUpload').click()">
+                        📂 Click to upload CSV<br>
+                        <span style="font-size:9px;color:#bbb">numeric cols → PCA signal</span>
+                    </div>
+                    <input type="file" id="csvUpload" accept=".csv">
+                </div>
+
+                <div>
+                    <div class="plabel">Sample Datasets</div>
+                    <select id="sampleDatasetSelect">
+                        <option value="" disabled selected>-- Select a dataset --</option>
+                        <option value="Datasets-Samples/CoolSpaceSites_2025 - 250.csv">CoolSpaceSites_2025 - 250 points.csv</option>
+                        <option value="Datasets-Samples/Depression QOF Prevalence - 12.csv">Depression QOF Prevalence - 12 points.csv</option>
+                        <option value="Datasets-Samples/Homicide Proceeded 2003-24 - 4512 N.csv">sHomicide Proceeded 2003 - 24 points.csv</option>
+                        <option value="Datasets-Samples/LFB Mobilisation data from 2025 - 240744.csv">LFB Mobilisation data from 2025 - 240744 points.csv</option>
+                        <option value="Datasets-Samples/london_reservoir_levels - 13573.csv">London Reservoir Levels - 13573.csv</option>
+                        <option value="Datasets-Samples/Malpractice_in_VTQ_- 6.csv">Malpractive in VTQ - 6 points.csv</option>
+                        <option value="Datasets-Samples/MPS_Antisocial_Behaviour - 250943.csv">MPS Antisocial Behaviour - 250943 points.csv</option>
+                        <option value="Datasets-Samples/MPS_MonthlyCrimeDashboard - 180855 N.csv">MPS Monthly Crime Dashboard - 180855 points.csv</option>
+                    </select>
+                </div>
+
+                <div id="statusBox">No dataset loaded.</div>
+
+                <div>
+                    <div class="plabel">Signal Trace</div>
+                    <div class="chart-wrap">
+                        <canvas id="signalCanvas" height="80" onclick="openChartModal('signal')" title="Click to expand"></canvas>
+                        <span class="expand-hint">click to expand ↗</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="plabel">Histogram</div>
+                    <div class="chart-wrap">
+                        <canvas id="histCanvas" height="60" onclick="openChartModal('hist')" title="Click to expand"></canvas>
+                        <span class="expand-hint">click to expand ↗</span>
+                    </div>
+                </div>
+
+                <div id="dataPreviewWrap">
+                    <div class="plabel" style="padding:5px 8px 3px;margin-bottom:0;display:flex;justify-content:space-between;align-items:center;cursor:pointer"
+                        onclick="openChartModal('table')" title="Click to expand">
+                        <span>Dataset Preview</span>
+                        <span class="expand-hint" style="position:static;opacity:1;font-size:9px;color:#4a4a6a">click to expand ↗</span>
+                    </div>
+                    <div id="dataPreviewTable" onclick="openChartModal('table')" title="Click to expand" style="cursor:zoom-in">
+                        <table><thead></thead><tbody></tbody></table>
+                    </div>
+                    <div id="dataPreviewMeta"></div>
+                </div>
+
+                <div id="eqBox">
+                    <div class="plabel" style="margin-bottom:6px">Synthesis Equation</div>
+                    <div id="eqMath">\[ \vec{P}_{art}(k) = \vec{P}_{base}(k) + \text{Signal}_{csv}(k) \cdot \delta \]</div>
+                </div>
+
+                <div id="created">SM-ART <br>Created by Samantha Mharie</br></div>
+
+                <div class="website-link">
+                    <a href="https://www.sm-artist.co.uk" target="_blank">www.sm-artist.co.uk</a>
+                </div>
+
+                <div class="social-links">
+                    <a href="https://instagram.com/smartist_art" target="_blank" aria-label="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://facebook.com/sammharieart" target="_blank" aria-label="Facebook">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="https://linkedin.com/in/samantha-mharie/" target="_blank" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div id="rightCol">
+                <div id="canvasWrap">
+                    <div id="progressOuter"><div id="progressBar"></div></div>
+                    <canvas id="artCanvas"></canvas>
+                    <div id="canvasLoadingOverlay">
+                        <div id="canvasLoadingLabel">⏳ Loading Python environment…</div>
+                        <div id="canvasLoadingBarTrack"><div id="canvasLoadingBarFill"></div></div>
+                    </div>
+                    <div id="colorbarWrap">
+                        <span id="cbMax">max</span>
+                        <canvas id="colorbar"></canvas>
+                        <span id="cbMin">min</span>
+                    </div>
+                    <div id="exportWrap">
+                        <button id="exportBtn" onclick="toggleExportDropdown()">⬇ Export</button>
+                        <div id="exportDropdown">
+                            <div class="export-option" onclick="exportArt('png')"><span class="ext-badge">PNG</span> Transparent · lossless</div>
+                            <div class="export-option" onclick="exportArt('jpg')"><span class="ext-badge">JPG</span> White bg · max quality</div>
+                            <div class="export-option" onclick="exportArt('svg')"><span class="ext-badge">SVG</span> Vector wrapper</div>
+                        </div>
+                    </div>
+                    <div id="zoomIndicator">100%</div>
+                    <button id="zoomResetBtn" onclick="resetZoom()">↺ Reset zoom</button>
+                    <div id="artTitle"></div>
+                </div>
+                <div id="eqPanel" style="display:none;background:#12121a;border-top:1px solid #2a2a3a;padding:10px 20px;flex-shrink:0">
+                    <div style="font-size:10px;font-weight:600;color:#7070a0;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">
+                        EQUATION (DATA-SYNTHESIZED) — <span id="eqDatasetLabel" style="color:#534AB7"></span>
+                    </div>
+                    <div id="eqContent" style="color:#d0d0f0;font-size:14px;overflow-x:auto;line-height:2"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- chart expand modal -->
+        <div id="chartModal" onclick="if(event.target===this)closeChartModal()">
+            <div id="chartModalBox">
+                <div id="chartModalHeader">
+                    <span id="chartModalTitle"></span>
+                    <button id="chartModalClose" onclick="closeChartModal()">✕</button>
+                </div>
+                <canvas id="chartModalCanvas"></canvas>
+                <div id="chartModalTableWrap"><table><thead></thead><tbody></tbody></table></div>
+                <div id="chartModalFooter">
+                    <div id="chartModalMeta"></div>
+                    <div id="chartModalDesc"></div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- end promptbar -->
+
+    <!-- MathJax config must come before the MathJax script -->
+    <script>MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, svg: { fontCache: 'global' }, options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea'] } };</script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
