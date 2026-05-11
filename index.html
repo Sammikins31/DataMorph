@@ -10,14 +10,24 @@
 
 <body>
 
+    <!-- TOP NAVIGATION -->
     <div id="topbar">
+
         <h2>🧬 Data-Morphed Generative Studio</h2>
+
+        <!-- Prompt input container -->
         <div style="display:flex;align-items:center;gap:5px">
             <label>Prompt:</label>
+
+            <!-- Text input for entering prompt -->
             <input type="text" id="promptInput" placeholder="bird, flying bird, fish..." style="width:190px">
         </div>
+
+        <!-- Palette selector container -->
         <div style="display:flex;align-items:center;gap:5px">
             <label>Palette:</label>
+
+            <!-- Dropdown for colour palette -->
             <select id="paletteSelect">
                 <option value="magma" selected>magma</option>
                 <option value="inferno">inferno</option>
@@ -27,81 +37,160 @@
                 <option value="turbo">turbo</option>
             </select>
         </div>
+
+        <!-- Detail slider container -->
         <div style="display:flex;align-items:center;gap:5px">
             <label>Detail:</label>
+
+            <!-- Range slider controlling density -->
             <input type="range" id="densitySlider" min="1" max="100" value="60" style="width:80px">
+
+            <!-- Display current slider value -->
             <span id="densityVal">60</span>
         </div>
+
+        <!-- Button to generate the pattern (initially disabled for loading environment) -->
         <button id="renderBtn" disabled>⚡ Generate Pattern</button>
+
+        <!-- Display Python/Pyodide loading status -->
         <div id="pyStatus">⏳ Loading Python…</div>
     </div>
 
+    <!-- Prompt/helper section -->
     <div id="promptbar">
+
+        <!-- Prompt suggesitons of selected working prompts -->
         <div style="display:flex;align-items:center;gap:5px;">
             <label>💡 <i>Try Prompt: Bird, Flying Bird, Fish, Rosette, Butterfly</i></label>
         </div>
 
+        <!-- Main content layout -->
         <div id="main">
+
+            <!-- Sidebar containing controls and dataset info -->
             <div id="sidebar">
                 <div>
+                    <!-- DATASET UPLOAD SECTION -->
+                    <!-- Name div classes 'Plabel' for Parameteric Label for naming purposes, separating 'label' -->
                     <div class="plabel">Dataset Upload</div>
+
+                    <!-- Upload area that triggers hidden file input -->
                     <div id="uploadArea" onclick="document.getElementById('csvUpload').click()">
                         📂 Click to upload CSV<br>
                         <span style="font-size:9px;color:#bbb">numeric cols → PCA signal</span>
                     </div>
+
+                    <!-- Hidden CSV file input -->
                     <input type="file" id="csvUpload" accept=".csv">
                 </div>
 
                 <div>
+                    <!-- EMBEDDED DATASET SAMPLE SECTION -->
                     <div class="plabel">Sample Datasets</div>
+
+                    <!-- Dropdown menu for embedded gathered datasets from folder -->
                     <select id="sampleDatasetSelect">
+                        <!-- Default placeholder option -->
                         <option value="" disabled selected>-- Select a dataset --</option>
-                        <option value="Datasets-Samples/CoolSpaceSites_2025 - 250.csv">CoolSpaceSites_2025 - 250 points.csv</option>
-                        <option value="Datasets-Samples/Depression QOF Prevalence - 12.csv">Depression QOF Prevalence - 12 points.csv</option>
-                        <option value="Datasets-Samples/Homicide Proceeded 2003-24 - 4512 N.csv">sHomicide Proceeded 2003 - 24 points.csv</option>
-                        <option value="Datasets-Samples/LFB Mobilisation data from 2025 - 240744.csv">LFB Mobilisation data from 2025 - 240744 points.csv</option>
-                        <option value="Datasets-Samples/london_reservoir_levels - 13573.csv">London Reservoir Levels - 13573.csv</option>
-                        <option value="Datasets-Samples/Malpractice_in_VTQ_- 6.csv">Malpractive in VTQ - 6 points.csv</option>
-                        <option value="Datasets-Samples/MPS_Antisocial_Behaviour - 250943.csv">MPS Antisocial Behaviour - 250943 points.csv</option>
-                        <option value="Datasets-Samples/MPS_MonthlyCrimeDashboard - 180855 N.csv">MPS Monthly Crime Dashboard - 180855 points.csv</option>
+
+                        <!-- Dataset options. List of dataset samples from folder -->
+                        <option value="Datasets-Samples/CoolSpaceSites_2025 - 250.csv">CoolSpaceSites_2025 - 250
+                            points.csv</option>
+                        <option value="Datasets-Samples/Depression QOF Prevalence - 12.csv">Depression QOF Prevalence -
+                            12 points.csv</option>
+                        <option value="Datasets-Samples/Homicide Proceeded 2003-24 - 4512 N.csv">sHomicide Proceeded
+                            2003 - 24 points.csv</option>
+                        <option value="Datasets-Samples/LFB Mobilisation data from 2025 - 240744.csv">LFB Mobilisation
+                            data from 2025 - 240744 points.csv</option>
+                        <option value="Datasets-Samples/london_reservoir_levels - 13573.csv">London Reservoir Levels -
+                            13573.csv</option>
+                        <option value="Datasets-Samples/Malpractice_in_VTQ_- 6.csv">Malpractive in VTQ - 6 points.csv
+                        </option>
+                        <option value="Datasets-Samples/MPS_Antisocial_Behaviour - 250943.csv">MPS Antisocial Behaviour
+                            - 250943 points.csv</option>
+                        <option value="Datasets-Samples/MPS_MonthlyCrimeDashboard - 180855 N.csv">MPS Monthly Crime
+                            Dashboard - 180855 points.csv</option>
                     </select>
                 </div>
 
+                <!-- Displays dataset loading/status messages -->
                 <div id="statusBox">No dataset loaded.</div>
 
+                <!-- SIGNAL TRACE VISUALISATION SECTION -->
                 <div>
+
+                    <!-- Section label  -->
                     <div class="plabel">Signal Trace</div>
+
+                    <!-- Wrapper for graph chart section inside the sidebar container -->
                     <div class="chart-wrap">
-                        <canvas id="signalCanvas" height="80" onclick="openChartModal('signal')" title="Click to expand"></canvas>
+
+                        <!-- Canvas for signal graphs -->
+                        <canvas id="signalCanvas" height="80" onclick="openChartModal('signal')"
+                            title="Click to expand"></canvas>
+
+                        <!-- Added a small expand hint to navigate user of being able to expand to view the full graph -->
                         <span class="expand-hint">click to expand ↗</span>
                     </div>
                 </div>
 
+                <!-- HISTOGRAM SECTION -->
                 <div>
                     <div class="plabel">Histogram</div>
+                    <!-- Another chart wrapper -->
                     <div class="chart-wrap">
-                        <canvas id="histCanvas" height="60" onclick="openChartModal('hist')" title="Click to expand"></canvas>
+
+                        <!-- Histogram canvas -->
+                        <canvas id="histCanvas" height="60" onclick="openChartModal('hist')"
+                            title="Click to expand"></canvas>
+
+                        <!-- Another expand helper -->
                         <span class="expand-hint">click to expand ↗</span>
                     </div>
                 </div>
 
+                <!-- DATASET PREVIEW POP UP -->
                 <div id="dataPreviewWrap">
-                    <div class="plabel" style="padding:5px 8px 3px;margin-bottom:0;display:flex;justify-content:space-between;align-items:center;cursor:pointer"
+                    <!-- Header -->
+                    <div class="plabel"
+                        style="padding:5px 8px 3px;margin-bottom:0;display:flex;justify-content:space-between;align-items:center;cursor:pointer"
                         onclick="openChartModal('table')" title="Click to expand">
+
+                        <!-- Title -->
                         <span>Dataset Preview</span>
-                        <span class="expand-hint" style="position:static;opacity:1;font-size:9px;color:#4a4a6a">click to expand ↗</span>
+
+                        <!-- Expand hint -->
+                        <span class="expand-hint" style="position:static;opacity:1;font-size:9px;color:#4a4a6a">click to
+                            expand ↗</span>
                     </div>
-                    <div id="dataPreviewTable" onclick="openChartModal('table')" title="Click to expand" style="cursor:zoom-in">
-                        <table><thead></thead><tbody></tbody></table>
+
+                    <!-- Data table preview -->
+                    <div id="dataPreviewTable" onclick="openChartModal('table')" title="Click to expand"
+                        style="cursor:zoom-in">
+
+                        <!-- Table structure -->
+                        <table>
+                            <thead></thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
+
+                    <!-- Metadata/info about dataset -->
                     <div id="dataPreviewMeta"></div>
                 </div>
 
+                <!-- EQUATION DISPLAY BOX -->
+                <!-- Equation display box showing the mathematical synthesis formula used to generate the artwork. While not technically necessary,
+                 it helps visually explain how the data-driven generation works. -->
                 <div id="eqBox">
                     <div class="plabel" style="margin-bottom:6px">Synthesis Equation</div>
-                    <div id="eqMath">\[ \vec{P}_{art}(k) = \vec{P}_{base}(k) + \text{Signal}_{csv}(k) \cdot \delta \]</div>
+
+                    <!-- Math Equation rendered by MathJax -->
+                    <div id="eqMath">\[ \vec{P}_{art}(k) = \vec{P}_{base}(k) + \text{Signal}_{csv}(k) \cdot \delta \]
+                    </div>
                 </div>
 
+                <!-- Creater information -->
                 <div id="created">SM-ART <br>Created by Samantha Mharie</br></div>
 
                 <div class="website-link">
@@ -121,51 +210,116 @@
                 </div>
             </div>
 
+            <!-- RIGHT SIDE CONTENT AREA -->
             <div id="rightCol">
+
+                <!-- Wrapper for artwork canvas -->
                 <div id="canvasWrap">
-                    <div id="progressOuter"><div id="progressBar"></div></div>
-                    <canvas id="artCanvas"></canvas>
-                    <div id="canvasLoadingOverlay">
-                        <div id="canvasLoadingLabel">⏳ Loading Python environment…</div>
-                        <div id="canvasLoadingBarTrack"><div id="canvasLoadingBarFill"></div></div>
+
+                    <!-- Progress bar container -->
+                    <div id="progressOuter">
+
+                        <!-- Progress bar fill -->
+                        <div id="progressBar"></div>
                     </div>
+
+                    <!-- ART CANVAS -->
+                    <!-- Main art rendering canvas. Where the generated artwork appears -->
+                    <canvas id="artCanvas"></canvas>
+
+                    <!-- Loading overlay shown while Python loads in the environment -->
+                    <div id="canvasLoadingOverlay">
+                        <!-- Loading text -->
+                        <div id="canvasLoadingLabel">⏳ Loading Python environment…</div>
+                        <!-- Progress bar track -->
+                        <div id="canvasLoadingBarTrack">
+                            <!-- Progress bar fill -->
+                            <div id="canvasLoadingBarFill"></div>
+                        </div>
+                    </div>
+
+                    <!-- COLOURBAR -->
+                    <!-- Colorbar legend to show colour bar palette -->
                     <div id="colorbarWrap">
                         <span id="cbMax">max</span>
                         <canvas id="colorbar"></canvas>
                         <span id="cbMin">min</span>
                     </div>
+
+                    <!-- EXPORT BUTTON -->
                     <div id="exportWrap">
+                        <!-- Drop down export selection-->
                         <button id="exportBtn" onclick="toggleExportDropdown()">⬇ Export</button>
                         <div id="exportDropdown">
-                            <div class="export-option" onclick="exportArt('png')"><span class="ext-badge">PNG</span> Transparent · lossless</div>
-                            <div class="export-option" onclick="exportArt('jpg')"><span class="ext-badge">JPG</span> White bg · max quality</div>
-                            <div class="export-option" onclick="exportArt('svg')"><span class="ext-badge">SVG</span> Vector wrapper</div>
+                            <div class="export-option" onclick="exportArt('png')"><span class="ext-badge">PNG</span>
+                                Transparent · lossless</div>
+                            <div class="export-option" onclick="exportArt('jpg')"><span class="ext-badge">JPG</span>
+                                White bg · max quality</div>
+                            <div class="export-option" onclick="exportArt('svg')"><span class="ext-badge">SVG</span>
+                                Vector wrapper</div>
                         </div>
                     </div>
+
+                    <!-- ZOOM -->
+                    <!-- Zoom level indicator to view high resolution and up close generative artwork -->
                     <div id="zoomIndicator">100%</div>
+
+                    <!-- Reset zoom button -->
                     <button id="zoomResetBtn" onclick="resetZoom()">↺ Reset zoom</button>
+
+                    <!-- Dynamic artwork title shown in artcanvas -->
                     <div id="artTitle"></div>
                 </div>
-                <div id="eqPanel" style="display:none;background:#12121a;border-top:1px solid #2a2a3a;padding:10px 20px;flex-shrink:0">
-                    <div style="font-size:10px;font-weight:600;color:#7070a0;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">
+
+                <!-- Generated Equation panel (initially hidden) -->
+                <div id="eqPanel"
+                    style="display:none;background:#12121a;border-top:1px solid #2a2a3a;padding:10px 20px;flex-shrink:0">
+                    
+                    <!-- Equation heading -->
+                    <div
+                        style="font-size:10px;font-weight:600;color:#7070a0;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">
                         EQUATION (DATA-SYNTHESIZED) — <span id="eqDatasetLabel" style="color:#534AB7"></span>
                     </div>
+                    <!-- Equation Content -->
                     <div id="eqContent" style="color:#d0d0f0;font-size:14px;overflow-x:auto;line-height:2"></div>
                 </div>
             </div>
         </div>
 
-        <!-- chart expand modal -->
+        <!-- Modal window for expandered charts -->
         <div id="chartModal" onclick="if(event.target===this)closeChartModal()">
+
+            <!-- Modal box -->
             <div id="chartModalBox">
+
+                <!-- Modal header -->
                 <div id="chartModalHeader">
+
+                    <!-- Modal title -->
                     <span id="chartModalTitle"></span>
+
+                    <!-- Close button -->
                     <button id="chartModalClose" onclick="closeChartModal()">✕</button>
                 </div>
+
+                <!-- Enlarging chart canvas for pop up window -->
                 <canvas id="chartModalCanvas"></canvas>
-                <div id="chartModalTableWrap"><table><thead></thead><tbody></tbody></table></div>
+
+                <!-- Expanded table wrapper -->
+                <div id="chartModalTableWrap">
+                    <table>
+                        <thead></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <!-- Modal footer for notes -->
                 <div id="chartModalFooter">
+
+                    <!-- Dataset metadata -->
                     <div id="chartModalMeta"></div>
+
+                    <!-- Description text -->
                     <div id="chartModalDesc"></div>
                 </div>
             </div>
@@ -173,10 +327,17 @@
 
     </div>
 
+    <!-- Configures MathJax settings -->
     <script>MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, svg: { fontCache: 'global' }, options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea'] } };</script>
+    
+    <!-- Loads MathJax library for rendering equations written in LaTeX-->
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <!-- Loads Pyodide (Python in the browser to convert Python code into WEBGL) -->
     <script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
+
     <script src="script.js"></script>
 
 </body>
+
 </html>
